@@ -49,7 +49,9 @@ async function handler(ctx) {
                 accounts.map(async (username) => {
                     try {
                         const userInfo = await api.getUser(username);
-                        const data = await api.getUserTweets(username, {});
+                        let data = await api.getUserTweets(username, {});
+                        // 排除转推，只保留原创内容
+                        data = utils.excludeRetweet(data);
                         if (!data || !userInfo) {
                             return [];
                         }
