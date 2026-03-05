@@ -7,8 +7,8 @@ import api from '../twitter/api';
 import utils from '../twitter/utils';
 import { getAllAccounts } from './twitter-accounts';
 
-// 缓存有效期 15 分钟（秒）
-const CACHE_TTL = 15 * 60;
+// 缓存有效期 30 分钟（秒）
+const CACHE_TTL = 30 * 60;
 
 export const route: Route = {
     path: '/twitter/all',
