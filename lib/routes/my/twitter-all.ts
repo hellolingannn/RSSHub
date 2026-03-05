@@ -67,7 +67,11 @@ async function handler(ctx) {
                 })
             );
 
-            const allItems = results.filter((r): r is PromiseFulfilledResult<any[]> => r.status === 'fulfilled').flatMap((r) => r.value);
+            const allItems = results
+                .filter((r): r is PromiseFulfilledResult<any[]> => r.status === 'fulfilled')
+                .flatMap((r) => r.value)
+                // 二次过滤：排除标题以 "RT @" 开头的转推
+                .filter((item) => !item.title?.startsWith('RT @'));
 
             // 按发布时间倒序排列
             allItems.sort((a, b) => {
