@@ -81,12 +81,18 @@ async function handler(ctx) {
 
     const items = typeof cached === 'string' ? JSON.parse(cached) : cached;
 
-    // 在每条内容前添加博主名称
+    // 在每条内容前添加博主名称，并移除图片
     const enrichedItems = (items as Array<Record<string, any>>).map((item) => {
         const authorName = Array.isArray(item.author) ? item.author[0]?.name : item.author;
-        if (authorName && item.description) {
-            item.description = `<p><strong>📢 ${authorName} (@${item._source})</strong></p>${item.description}`;
+        let desc = item.description || '';
+        // 移除所有 <img> 标签
+        desc = desc.replaceAll(/<img[^>]*>/gi, '');
+        // 移除图片链接后可能残留的空 <br> 和空白
+        desc = desc.replaceAll(/(<br\s*\/?>){3,}/gi, '<br><br>');
+        if (authorName) {
+            desc = `<p><strong>📢 ${authorName} (@${item._source})</strong></p>${desc}`;
         }
+        item.description = desc;
         return item;
     });
 
